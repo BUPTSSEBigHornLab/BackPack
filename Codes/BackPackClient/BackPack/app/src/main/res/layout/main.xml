@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.peng.backpack.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="移动物体放射源监测系统"
+            android:textSize="@dimen/bluetooth_spp_text_size"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/bt_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="参数设置"
+            android:layout_alignBaseline="@+id/bt_information"
+            android:layout_alignBottom="@+id/bt_information"
+            android:layout_alignLeft="@+id/bt_test"
+            android:layout_alignStart="@+id/bt_test" />
+
+        <Button
+            android:id="@+id/bt_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IO测试"
+            android:layout_alignBaseline="@+id/bt_data"
+            android:layout_alignBottom="@+id/bt_data"
+            android:layout_alignLeft="@+id/bt_monitor"
+            android:layout_alignStart="@+id/bt_monitor" />
+
+        <Button
+            android:id="@+id/bt_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="信息上传"
+            android:layout_marginBottom="49dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/bt_data"
+            android:layout_alignStart="@+id/bt_data" />
+
+        <Button
+            android:id="@+id/bt_bluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="蓝牙配对"
+            android:layout_marginTop="43dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/bt_data"
+            android:layout_alignStart="@+id/bt_data" />
+
+        <Button
+            android:id="@+id/bt_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数据管理"
+            android:layout_marginLeft="63dp"
+            android:layout_marginStart="63dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/bt_monitor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="智能监测"
+            android:layout_marginRight="66dp"
+            android:layout_marginEnd="66dp"
+            android:layout_alignBaseline="@+id/bt_bluetooth"
+            android:layout_alignBottom="@+id/bt_bluetooth"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+</LinearLayout>
