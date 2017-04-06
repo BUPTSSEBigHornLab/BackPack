@@ -1,6 +1,6 @@
 /*
  *Create by:ZhangYunpeng
- *Date:2017/3/29
+ *Date:2017/03/29
  *Modify by:
  *Date:
  *Modify by:
@@ -11,6 +11,7 @@ package com.example.peng.backpack;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.test.espresso.core.deps.guava.util.concurrent.Monitor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +40,7 @@ import static com.example.peng.backpack.R.styleable.AlertDialog;
 public class MainActivity extends Activity {
 
 
-    BluetoothSPP bt;
+    public static BluetoothSPP bt;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -95,7 +96,12 @@ public class MainActivity extends Activity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         /**************************************智能监测页面*************************************/
         Button btmonitor = (Button) findViewById(R.id.bt_monitor);
-
+        btmonitor.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MonitorActivity.class);
+                startActivity(intent);
+            }
+        });
         /**************************************数据管理页面*************************************/
         Button btdata = (Button) findViewById(R.id.bt_data);
 
