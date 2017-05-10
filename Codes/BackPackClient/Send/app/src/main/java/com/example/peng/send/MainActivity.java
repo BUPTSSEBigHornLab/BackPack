@@ -15,6 +15,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,6 +46,9 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.support.v7.app.AlertDialog.Builder;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static com.example.peng.send.R.id.edit;
 
 public class MainActivity extends Activity {
@@ -52,6 +57,8 @@ public class MainActivity extends Activity {
     public static BluetoothSPP bt;
     private  EditText edittext;
     private  TextView textview;
+    private Timer mtimer;
+    private int TIME = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,22 +107,41 @@ public class MainActivity extends Activity {
         edittext = (EditText)findViewById(edit);
         send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String to_send = edittext.getText().toString();
-                bt.send(to_send.getBytes(),true);
+                //String to_send = edittext.getText().toString();
+                timer.schedule(task, 1000, 1000); // 1s后执行task,经过1s再次执行
+                //String to_send = "GMA";
+                //bt.send(to_send.getBytes(),true);
             }
         });
         textview = (TextView) findViewById(R.id.text);
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                String res = new String(data);
+                //String res = new String(data);
                 textview.setText(message);
-                Toast.makeText(getApplicationContext()
-                        , res
-                        , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
                 // Do something when data incoming
             }
         });
     }
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                String to_send = "GMA";
+                bt.send(to_send.getBytes(),true);
+            }
+            super.handleMessage(msg);
+        };
+    };
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
 
     public void onStart() {
         super.onStart();
