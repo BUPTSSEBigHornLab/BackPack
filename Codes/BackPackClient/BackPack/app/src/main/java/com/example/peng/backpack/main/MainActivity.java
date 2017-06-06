@@ -6,15 +6,12 @@
  *Modify by:
  *Date:
  */
-package com.example.peng.backpack;
+package com.example.peng.backpack.main;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.net.Uri;
-import android.support.test.espresso.core.deps.guava.util.concurrent.Monitor;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,8 +20,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import android.support.v7.app.AlertDialog.Builder;
 
+import com.example.peng.backpack.monitor.MonitorActivity;
+import com.example.peng.backpack.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -35,7 +33,6 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP.BluetoothConnectionListener;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP.OnDataReceivedListener;
 import app.akexorcist.bluetotohspp.library.DeviceList;
-import static com.example.peng.backpack.R.styleable.AlertDialog;
 
 public class MainActivity extends Activity {
 

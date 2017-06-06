@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.example.peng.backpack.MonitorActivity">
+    tools:context="com.example.peng.backpack.monitor.MonitorActivity">
     <!-- 左边 -->
     <LinearLayout
         android:id="@+id/left"
@@ -68,10 +68,10 @@
                     android:layout_height="0dp"
                     android:layout_weight="4">
                     <ListView
-                        android:id="@+id/test_list"
+                        android:id="@+id/datalist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_gravity= "center_horizontal"
                         android:divider="#DCDCDC"
                         android:dividerHeight="1dp">
                     </ListView>
