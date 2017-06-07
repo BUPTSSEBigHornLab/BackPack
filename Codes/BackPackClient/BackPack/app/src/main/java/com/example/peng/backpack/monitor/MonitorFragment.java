@@ -1,6 +1,7 @@
 package com.example.peng.backpack.monitor;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 public class MonitorFragment extends Fragment {
 
     private static final String TAG = "MonitorFragment";
+    private static final int RspSize = 4;
 
     /**
      * 用于存储各个通道数据的列表，MonitorItem中包含了三列数据信息 ，通道号、测量值、状态
@@ -33,11 +35,27 @@ public class MonitorFragment extends Fragment {
     private List<MonitorItem> list;
     private MonitorAdapter mAdapter;
     private ListView listView;
+    private StatusListener mCallback;
+    private Button status_button;
+
+    public interface StatusListener {
+        public void onStatus(int status);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (StatusListener)activity;
+        }catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString());
+        }
     }
 
     @Override
@@ -53,6 +71,7 @@ public class MonitorFragment extends Fragment {
         list = new ArrayList<MonitorItem>();
         mAdapter = new MonitorAdapter(this.getActivity(), list);
         final Activity activity = this.getActivity();
+        status_button = (Button)view.findViewById(R.id.bt_status);
         listView = (ListView) view.findViewById(R.id.datalist);
 
         listView.setAdapter(mAdapter);
@@ -98,6 +117,8 @@ public class MonitorFragment extends Fragment {
 
         Log.i(TAG, "UpdateUI: " + data);
         list.clear();
+        String[] rsp_status = new String[RspSize];
+        int index = -1;
 
         for (int i = 3; i <= 21; i += 6) {
             String channel = data.substring(i, i + 1);
@@ -109,9 +130,58 @@ public class MonitorFragment extends Fragment {
             item.setMesure_val(val);
             item.setStatus(status);
             list.add(item);
+
+            index++;
+            rsp_status[index] = status;
         }
 
+        SetStatus(rsp_status);
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void SetStatus(String[] rsp_status) {
+        /**
+         * 以数值型代表探头状态，并判断背包状态
+         * 0：禁用状态；1：正常；2：报警；3：严重报警；4：故障；
+         * */
+        int BackStatus = 0;
+        int status = 0;
+        for(int i = 0; i < RspSize; i++) {
+            if(rsp_status[i].equals("F")) {
+                status = 4;
+            }else if(rsp_status[i].equals("N")) {
+                status = 1;
+            }else if(rsp_status[i].equals("A")) {
+                status = 2;
+            }else if(rsp_status[i].equals("S")) {
+                status = 3;
+            }else {
+
+            }
+            BackStatus = Math.max(BackStatus, status);
+        }
+        setButtonStatus(BackStatus);
+        mCallback.onStatus(BackStatus);
+    }
+    private void setButtonStatus(int status) {
+        if(status == 0) {
+            status_button.setText("禁用");
+            status_button.setBackgroundColor(Color.GRAY);
+        }else if(status == 1) {
+            status_button.setText("正常");
+            status_button.setBackgroundColor(Color.GREEN);
+        }else if(status == 2) {
+            status_button.setText("污染");
+            status_button.setBackgroundColor(Color.RED);
+        }else if(status == 3) {
+            status_button.setText("严重污染");
+            status_button.setBackgroundColor(Color.MAGENTA);
+        }else if(status == 4) {
+            status_button.setText("故障");
+            status_button.setBackgroundColor(Color.YELLOW);
+        }else {
+
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,20 @@ import java.util.List;
 
 public class TraceFragment extends Fragment {
 
+    private static final String TAG = "TraceFragment";
+
     MapView mMapView = null;
     BaiduMap mBaiduMap = null;
     Overlay last_track = null;
-    int flag = 1;
+    private static int ColorStatus = 0;
+
+    public void setColorStatus(int status) {
+        ColorStatus = status;
+    }
+
+    public int getColorStatus() {
+        return ColorStatus;
+    }
 
     LocationService locationService;
     LatLng lastPnt = null;
@@ -128,6 +139,10 @@ public class TraceFragment extends Fragment {
                         .direction(100).latitude(location.getLatitude())
                         .longitude(location.getLongitude()).build();
 
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                Log.i(TAG, "onReceiveLocation: "+"纬度"+Double.toString(latitude)+"经度" + Double.toString(longitude));
+
                 mBaiduMap.setMyLocationData(locData);
                 LatLng ll = new LatLng(location.getLatitude(),
                         location.getLongitude());
@@ -147,23 +162,25 @@ public class TraceFragment extends Fragment {
                 pointList.add(lastPnt);
                 pointList.add(pnt);
                 lastPnt = pnt;
-                if(flag == 0) {
+                if(ColorStatus == 0) {
+                    PolylineOptions polyline = new PolylineOptions().width(10).color(Color.GRAY).points(pointList);
+                    Overlay track = mBaiduMap.addOverlay(polyline);
+                }else if(ColorStatus == 1){
                     PolylineOptions polyline = new PolylineOptions().width(10).color(Color.GREEN).points(pointList);
                     Overlay track = mBaiduMap.addOverlay(polyline);
-//                    if(last_track != null){ //每增加一个点就新绘制一条路径, 然后删除上一个点对应的路径
-//                        last_track.remove();
-//                    }
-//                    last_track = track;
-                    flag = 1;
-                }else {
+                }else if(ColorStatus == 2) {
                     PolylineOptions polyline = new PolylineOptions().width(10).color(Color.RED).points(pointList);
                     Overlay track = mBaiduMap.addOverlay(polyline);
-//                    if(last_track != null){ //每增加一个点就新绘制一条路径, 然后删除上一个点对应的路径
-//                        last_track.remove();
-//                    }
-//                    last_track = track;
-                    flag = 0;
+                }else if(ColorStatus == 3) {
+                    PolylineOptions polyline = new PolylineOptions().width(10).color(Color.MAGENTA).points(pointList);
+                    Overlay track = mBaiduMap.addOverlay(polyline);
+                }else if(ColorStatus == 4) {
+                    PolylineOptions polyline = new PolylineOptions().width(10).color(Color.YELLOW).points(pointList);
+                    Overlay track = mBaiduMap.addOverlay(polyline);
+                }else {
+
                 }
+
 
                 if (location.getLocType() == BDLocation.TypeServerError) {
                     Toast.makeText(getActivity().getApplicationContext(), "服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因", Toast.LENGTH_LONG).show();

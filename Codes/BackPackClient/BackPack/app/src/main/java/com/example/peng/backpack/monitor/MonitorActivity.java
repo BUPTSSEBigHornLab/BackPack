@@ -30,11 +30,10 @@ import java.util.TimerTask;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
-public class MonitorActivity extends AppCompatActivity {
+public class MonitorActivity extends AppCompatActivity
+    implements MonitorFragment.StatusListener{
 
     private static final String TAG = "MonitorActivity";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +43,16 @@ public class MonitorActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
-
     }
 
+    @Override
+    public void onStatus(int status) {
+        TraceFragment traceFragment =
+                (TraceFragment)getSupportFragmentManager().findFragmentById(R.id.left);
+        if(traceFragment != null) {
+            traceFragment.setColorStatus(status);
+        }else {
 
+        }
+    }
 }
