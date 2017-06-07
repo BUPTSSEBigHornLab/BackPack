@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import com.baidu.mapapi.map.offline.MKOLSearchRecord;
 import com.baidu.mapapi.map.offline.MKOLUpdateElement;
 import com.baidu.mapapi.map.offline.MKOfflineMap;

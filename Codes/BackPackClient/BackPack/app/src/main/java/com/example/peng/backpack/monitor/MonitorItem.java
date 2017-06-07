@@ -1,15 +1,18 @@
 package com.example.peng.backpack.monitor;
 
-/*
+/**
  *Create by:ZhangYunpeng
  *Date:2017/06/01
  *Modify by:
  *Date:
  *Modify by:
  *Date:
+ *describe:包含三列数据信息 ，通道号、测量值、状态
  */
 
 public class MonitorItem {
+
+    private static final String TAG = "MonitorItem";
     private String channel;
     private String measure_val;
     private String status;

@@ -1,16 +1,24 @@
 package com.example.peng.backpack.monitor.trace;
 
-import android.content.Context;
+/**
+ *Create by:Zhang Yunpeng
+ *Date:2017/06/04
+ *Modify by:
+ *Date:
+ *Modify by:
+ *Date:
+ *describe:以service的形式使定位服务可以一直处于运行状态
+ */
 
+import android.content.Context;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 
-/**
- * 以service的形式使定位服务可以一直处于运行状态
- */
 public class LocationService {
+
+    private static final String TAG = "LocationService";
     private LocationClient client = null;
     private LocationClientOption mOption, DIYoption;
     private Object objLock = new Object();

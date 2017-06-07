@@ -1,34 +1,19 @@
-/*
- *Create by:ZhangYunpeng
+package com.example.peng.backpack.monitor;
+
+/**
+ *Create by:Zhang Yunpeng
  *Date:2017/03/30
  *Modify by:
  *Date:
  *Modify by:
  *Date:
+ *describe:智能监测页面，实时采集监测数据，采用Fragment，左边绘制变色轨迹，右边进行数据呈现
  */
-package com.example.peng.backpack.monitor;
 
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
-
 import com.example.peng.backpack.R;
-import com.example.peng.backpack.main.MainActivity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 public class MonitorActivity extends AppCompatActivity
     implements MonitorFragment.StatusListener{
@@ -45,8 +30,10 @@ public class MonitorActivity extends AppCompatActivity
         }
     }
 
+    /** 使用接口实现Fragment间通信，通信过程Fragment-Activity-Fragment*/
     @Override
     public void onStatus(int status) {
+        //在activity中查找fragment，并调用Fragment函数
         TraceFragment traceFragment =
                 (TraceFragment)getSupportFragmentManager().findFragmentById(R.id.left);
         if(traceFragment != null) {

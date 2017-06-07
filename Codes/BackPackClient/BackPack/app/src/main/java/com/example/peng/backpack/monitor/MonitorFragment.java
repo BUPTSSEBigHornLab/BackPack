@@ -1,5 +1,15 @@
 package com.example.peng.backpack.monitor;
 
+/**
+ *Create by:Zhang Yunpeng
+ *Date:2017/06/05
+ *Modify by:
+ *Date:
+ *Modify by:
+ *Date:
+ *describe:数据监测呈现模块，对采集的监测数据呈现，并判断背包的状态
+ */
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,16 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.example.peng.backpack.R;
 import com.example.peng.backpack.main.MainActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 
 public class MonitorFragment extends Fragment {
@@ -35,9 +41,12 @@ public class MonitorFragment extends Fragment {
     private List<MonitorItem> list;
     private MonitorAdapter mAdapter;
     private ListView listView;
+
     private StatusListener mCallback;
     private Button status_button;
+    private Timer timer = new Timer();
 
+    //用于Fragment和Activity通信的接口
     public interface StatusListener {
         public void onStatus(int status);
     }
@@ -67,6 +76,7 @@ public class MonitorFragment extends Fragment {
         return view;
     }
 
+    /** 界面初始化 */
     private void init(View view){
         list = new ArrayList<MonitorItem>();
         mAdapter = new MonitorAdapter(this.getActivity(), list);
@@ -79,7 +89,7 @@ public class MonitorFragment extends Fragment {
         Button srart = (Button) view.findViewById(R.id.start);
         srart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                timer.schedule(task, 0, 2000); // 1s后执行task,经过1s再次执行
+                timer.schedule(task, 0, 2000); // 0s后执行task,经过2s再次执行
             }
         });
 
@@ -91,6 +101,9 @@ public class MonitorFragment extends Fragment {
         });
     }
 
+    /** 使用timer定时的向背包发送请求获取数据
+     * 格式timer.schedule(task, m, n) m s后执行task，经过n s再次执行
+     * */
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
@@ -99,10 +112,7 @@ public class MonitorFragment extends Fragment {
             }
             super.handleMessage(msg);
         }
-
-        ;
     };
-    Timer timer = new Timer();
     TimerTask task = new TimerTask() {
         @Override
         public void run() {
@@ -113,8 +123,8 @@ public class MonitorFragment extends Fragment {
         }
     };
 
+    /** 解析数据，更新界面 */
     private void UpdateUI(String data) {
-
         Log.i(TAG, "UpdateUI: " + data);
         list.clear();
         String[] rsp_status = new String[RspSize];
@@ -163,6 +173,8 @@ public class MonitorFragment extends Fragment {
         setButtonStatus(BackStatus);
         mCallback.onStatus(BackStatus);
     }
+
+    //将背包状态呈现在界面上
     private void setButtonStatus(int status) {
         if(status == 0) {
             status_button.setText("禁用");
@@ -183,5 +195,4 @@ public class MonitorFragment extends Fragment {
 
         }
     }
-
 }

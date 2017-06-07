@@ -1,27 +1,26 @@
 package com.example.peng.backpack.monitor;
 
-/*
- *Create by:ZhangYunpeng
+/**
+ *Create by:Zhang Yunpeng
  *Date:2017/06/01
  *Modify by:
  *Date:
  *Modify by:
  *Date:
+ *describe:数据呈现时，用于向Listview中添加数据的adapter
  */
 
 import java.util.List;
-import java.util.Objects;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.example.peng.backpack.R;
 
 public class MonitorAdapter extends BaseAdapter{
+
     private Context ctx;
     private List<MonitorItem> list;
 
@@ -51,6 +50,7 @@ public class MonitorAdapter extends BaseAdapter{
         if (arg0 <= list.size()) {
             MonitorItem item = list.get(arg0);
 
+            //将每组数据添加到每一栏
             if (null == arg1) {
                 arg1 = createListItemView(arg2);
                 ph = new PlaceHolder();
@@ -69,6 +69,7 @@ public class MonitorAdapter extends BaseAdapter{
         return arg1;
     }
 
+    /** 将以字符标志的探头状态转换成文字呈现在屏幕上 */
     private void setStatus(PlaceHolder ph, MonitorItem item) {
         String temp = item.getStatus();
         if(temp.equals("F")) {
@@ -90,8 +91,8 @@ public class MonitorAdapter extends BaseAdapter{
     }
 
     private class PlaceHolder{
-        public TextView channel;
-        public TextView measure_val;
-        public TextView status;
+        public TextView channel;       //通道
+        public TextView measure_val;   //测量值
+        public TextView status;        //探头状态
     }
 }

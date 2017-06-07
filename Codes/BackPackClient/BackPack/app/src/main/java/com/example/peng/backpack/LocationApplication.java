@@ -1,9 +1,18 @@
 package com.example.peng.backpack;
 
+/**
+ *Create by:Zhang Yunpeng
+ *Date:2017/06/06
+ *Modify by:
+ *Date:
+ *Modify by:
+ *Date:
+ *describe:创建定位应用
+ */
+
 import android.app.Application;
 import android.app.Service;
 import android.os.Vibrator;
-
 import com.baidu.mapapi.SDKInitializer;
 import com.example.peng.backpack.monitor.trace.LocationService;
 

@@ -1,9 +1,17 @@
 package com.example.peng.backpack.monitor;
 
+/**
+ *Create by:Zhang Yunpeng
+ *Date:2017/06/06
+ *Modify by:
+ *Date:
+ *Modify by:
+ *Date:
+ *describe:轨迹绘制模块，在绘制工作人员轨迹同时根据背包状态将轨迹进行着色
+ */
+
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,10 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -33,16 +39,15 @@ import java.util.List;
 public class TraceFragment extends Fragment {
 
     private static final String TAG = "TraceFragment";
+    private MapView mMapView = null;    //地图视图
+    private BaiduMap mBaiduMap = null;  //地图
+    private Overlay last_track = null;  //路径
+    private static int ColorStatus = 0; //当前所选用的颜色
 
-    MapView mMapView = null;
-    BaiduMap mBaiduMap = null;
-    Overlay last_track = null;
-    private static int ColorStatus = 0;
-
+    /** 设置与获取轨迹颜色 */
     public void setColorStatus(int status) {
         ColorStatus = status;
     }
-
     public int getColorStatus() {
         return ColorStatus;
     }
@@ -66,15 +71,14 @@ public class TraceFragment extends Fragment {
     }
 
     private void init(View view){
-        //在使用SDK各组件之前初始化context信息，传入ApplicationContext
-        //注意该方法要再setContentView方法之前实现
+        /**在使用SDK各组件之前初始化context信息，传入ApplicationContext
+         *注意该方法要再setContentView方法之前实现
+         **/
         Activity activity = getActivity();
         mMapView = (MapView) view.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
-
         //开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
-
     }
 
     @Override
@@ -87,20 +91,17 @@ public class TraceFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //获取locationservice实例，建议应用中只初始化1个location实例，然后使用
-        //可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
+        /**获取locationservice实例，建议应用中只初始化1个location实例，然后使用
+         *可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
+         **/
         locationService = ((LocationApplication) getActivity().getApplication()).locationService;
-
         locationService.registerListener(mListener); //注册监听
-
         int type = getActivity().getIntent().getIntExtra("from", 0);
         if (type == 0) {
             locationService.setLocationOption(locationService.getDefaultLocationClientOption());
         } else if (type == 1) {
             locationService.setLocationOption(locationService.getOption());
         }
-
         //启动定位服务,此时百度地图开始每隔一定时间(setScanSpan)就发起一次定位请求
         locationService.start();
 
@@ -132,13 +133,13 @@ public class TraceFragment extends Fragment {
         @Override
         public void onReceiveLocation(BDLocation location) {
             if (null != location && location.getLocType() != BDLocation.TypeServerError) {
-
                 MyLocationData locData = new MyLocationData.Builder()
                         .accuracy(location.getRadius())
                         // 此处设置开发者获取到的方向信息，顺时针0-360
                         .direction(100).latitude(location.getLatitude())
                         .longitude(location.getLongitude()).build();
 
+                //获取经纬度
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 Log.i(TAG, "onReceiveLocation: "+"纬度"+Double.toString(latitude)+"经度" + Double.toString(longitude));
@@ -147,15 +148,18 @@ public class TraceFragment extends Fragment {
                 LatLng ll = new LatLng(location.getLatitude(),
                         location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
-                //builder.target(ll).zoom(18.0f);
                 builder.target(ll);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
+                /** 根据经纬度生成一个坐标点
+                 * 判断如果是第一次定位则不发生连线
+                 * 以后每次将本次定位点与上一次定位点相连接，产生一条轨迹
+                 * 根据颜色状态，改变当前轨迹颜色
+                 * 如果定位失败，告知用户
+                 * */
                 LatLng pnt = new LatLng(location.getLatitude(), location.getLongitude());
-
                 if(lastPnt == null){
                     lastPnt = pnt;
-                    //pointList.add(pnt);
                     return;
                 }
                 List<LatLng> pointList = new ArrayList<>();
@@ -180,7 +184,6 @@ public class TraceFragment extends Fragment {
                 }else {
 
                 }
-
 
                 if (location.getLocType() == BDLocation.TypeServerError) {
                     Toast.makeText(getActivity().getApplicationContext(), "服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因", Toast.LENGTH_LONG).show();

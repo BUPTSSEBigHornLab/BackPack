@@ -1,12 +1,14 @@
-/*
+package com.example.peng.backpack.main;
+
+/**
  *Create by:ZhangYunpeng
  *Date:2017/03/29
  *Modify by:
  *Date:
  *Modify by:
  *Date:
+ *describe:主页面，用于向各个页面产生跳转，并创建需要全局使用的蓝牙连接
  */
-package com.example.peng.backpack.main;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
@@ -20,14 +22,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.peng.backpack.monitor.MonitorActivity;
 import com.example.peng.backpack.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.BluetoothSPP.BluetoothConnectionListener;
@@ -36,12 +36,8 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends Activity {
 
-
+    private static final String TAG = "MainActivity";
     public static BluetoothSPP bt;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -88,8 +84,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         /**************************************智能监测页面*************************************/
         Button btmonitor = (Button) findViewById(R.id.bt_monitor);
@@ -113,8 +107,6 @@ public class MainActivity extends Activity {
     }
 
     public void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         //检查蓝牙是否可用
         if (!bt.isBluetoothEnabled()) {
@@ -126,8 +118,6 @@ public class MainActivity extends Activity {
                 bt.startService(BluetoothState.DEVICE_OTHER);
             }
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
@@ -176,10 +166,6 @@ public class MainActivity extends Activity {
         normalDialog.show();
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder()
                 .setName("Main Page") // TODO: Define a title for the content shown.
@@ -195,8 +181,6 @@ public class MainActivity extends Activity {
     @Override
     public void onStop() {
         super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
