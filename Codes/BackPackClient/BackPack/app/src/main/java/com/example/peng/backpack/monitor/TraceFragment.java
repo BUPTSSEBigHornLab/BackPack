@@ -43,6 +43,7 @@ public class TraceFragment extends Fragment {
     private BaiduMap mBaiduMap = null;  //地图
     private Overlay last_track = null;  //路径
     private static int ColorStatus = 0; //当前所选用的颜色
+    private static String[] statusName = {"禁用", "正常", "污染", "严重污染", "故障"};
 
     /** 设置与获取轨迹颜色 */
     public void setColorStatus(int status) {
@@ -142,7 +143,8 @@ public class TraceFragment extends Fragment {
                 //获取经纬度
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                Log.i(TAG, "onReceiveLocation: "+"纬度"+Double.toString(latitude)+"经度" + Double.toString(longitude));
+                Log.i(TAG, "onReceiveLocation: "+"纬度："+Double.toString(latitude)+"；经度：" +
+                        Double.toString(longitude) + "；状态：" + statusName[ColorStatus]);
 
                 mBaiduMap.setMyLocationData(locData);
                 LatLng ll = new LatLng(location.getLatitude(),

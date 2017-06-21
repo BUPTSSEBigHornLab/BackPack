@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     public static BluetoothSPP bt;
+    //public static DataBaseModule dataBaseModule;
     private GoogleApiClient client;
 
     @Override
@@ -48,7 +49,7 @@ public class MainActivity extends Activity {
 
         bt.setOnDataReceivedListener(new OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
         /**************************************蓝牙配置页面*************************************/
@@ -107,11 +108,13 @@ public class MainActivity extends Activity {
     }
 
     public void onStart() {
+        super.onStart();
         client.connect();
         //检查蓝牙是否可用
         if (!bt.isBluetoothEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+            //dataBaseModule.addPack(bt.getConnectedDeviceName(), bt.getConnectedDeviceAddress());
         } else {
             if (!bt.isServiceAvailable()) {
                 bt.setupService();

@@ -12,6 +12,7 @@ package com.example.peng.backpack.module;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -54,17 +55,120 @@ public class DataBaseModule {
     }
 
     /** 在PACK表中查询数据 */
-    public void queryPack(String PackName, String MACAddress) {
+    public void queryPack() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        Cursor cursor = db.query("PACK", null, null, null, null, null, null);
+        if(cursor.moveToFirst()) {
+            do{
+                String PackName = cursor.getString(cursor.getColumnIndex("PackName"));
+                String MACAddress = cursor.getString(cursor.getColumnIndex("MACAddress"));
+                Log.i(TAG, "queryPack: " + PackName);
+                Log.i(TAG, "queryPack: " + MACAddress);
+            }while(cursor.moveToNext());
+        }
+    }
+
+    /** 根据MAC地址查询PACKID */
+    public int queryPackID(String MACAddress) {
+        int id = -1;
+
+
+        return id;
     }
 
     /** 在EVENT表中添加数据 */
-    public void addEvent(String PackName, String MACAddress) {
+    public void addEvent(int PackID, String StartTime, String EndTime) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("PackName", PackName);
-        values.put("MACAddress", MACAddress);
-        db.insert("PACK", null, values);
+        values.put("PackID", PackID);
+        values.put("StartTime", StartTime);
+        values.put("EndTime", EndTime);
+        db.insert("EVENT", null, values);
+    }
+
+    /** 在EVENT表中删除数据 */
+    public void deleteEvent() {
+
+    }
+
+    /** 在EVENT表中更新数据 */
+    public void updateEvent() {
+
+    }
+
+    /** 在EVENT表中查询数据 */
+    public void queryEvent() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("EVENT", null, null, null, null, null, null);
+        if(cursor.moveToFirst()) {
+            do{
+                int PackID = cursor.getInt(cursor.getColumnIndex("PackID"));
+                String StartTime = cursor.getString(cursor.getColumnIndex("StartTime"));
+                String EndTime = cursor.getString(cursor.getColumnIndex("EndTime"));
+                Log.i(TAG, "queryPack: " + PackID);
+                Log.i(TAG, "queryPack: " + StartTime);
+                Log.i(TAG, "queryEvent: " + EndTime);
+            }while(cursor.moveToNext());
+        }
+    }
+
+    /** 在Data中添加数据 */
+    public void addData(int PackID, int EventID, String Time, String RSP1, String RSP2,
+                        String RSP3, String RSP4, String State,
+                        double LongiTude, double LatiTude) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("PackID", PackID);
+        values.put("EventID", EventID);
+        values.put("Time", Time);
+        values.put("RSP1", RSP1);
+        values.put("RSP2", RSP2);
+        values.put("RSP3", RSP3);
+        values.put("RSP4", RSP4);
+        values.put("State", State);
+        values.put("LongiTude", LongiTude);
+        values.put("LatiTude", LatiTude);
+        db.insert("DATA", null, values);
+    }
+
+    /** 在DATA表中删除数据 */
+    public void deleteData() {
+
+    }
+
+    /** 在EVENT表中更新数据 */
+    public void updateData() {
+
+    }
+
+    /** 在EVENT表中查询数据 */
+    public void queryData() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("DATA", null, null, null, null, null, null);
+        if(cursor.moveToFirst()) {
+            do{
+                int PackID = cursor.getInt(cursor.getColumnIndex("PackID"));
+                int EventID = cursor.getInt(cursor.getColumnIndex("EventID"));
+                String Time = cursor.getString(cursor.getColumnIndex("Time"));
+                String RSP1 = cursor.getString(cursor.getColumnIndex("RSP1"));
+                String RSP2 = cursor.getString(cursor.getColumnIndex("RSP2"));
+                String RSP3 = cursor.getString(cursor.getColumnIndex("RSP3"));
+                String RSP4 = cursor.getString(cursor.getColumnIndex("RSP4"));
+                String State = cursor.getString(cursor.getColumnIndex("State"));
+                double LongiTude = cursor.getDouble(cursor.getColumnIndex("LongiTude"));
+                double LatiTude = cursor.getDouble(cursor.getColumnIndex("LatiTude"));
+
+                Log.i(TAG, "queryPack: " + PackID);
+                Log.i(TAG, "queryPack: " + EventID);
+                Log.i(TAG, "queryEvent: " + Time);
+                Log.i(TAG, "queryData: " + RSP1);
+                Log.i(TAG, "queryData: " + RSP2);
+                Log.i(TAG, "queryData: " + RSP3);
+                Log.i(TAG, "queryData: " + RSP4);
+                Log.i(TAG, "queryData: " + State);
+                Log.i(TAG, "queryData: " + LongiTude);
+                Log.i(TAG, "queryData: " + LatiTude);
+            }while(cursor.moveToNext());
+        }
     }
 }

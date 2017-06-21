@@ -23,13 +23,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static String CREATE_PACK = "create table PACK ("
             + "PackID integer primary key autoincrement," //自增ID
             + "PackName text,"                            //背包名称
-            + "MACAddress text";                          //MAC地址
+            + "MACAddress text unique)";                          //MAC地址
     /** 创建事件表 */
     public static String CREATE_EVENT = "create table EVENT ("
             + "EventID integer primary key autoincrement,"//自增ID
             + "PackID integer,"                           //背包ID
             + "StartTime text,"                           //开始时间
-            + "EndTime text";                             //终止时间
+            + "EndTime text)";                             //终止时间
     //创建数据表
     public static String CREATE_DATA = "create table DATA ("
             + "DataID integer primary key autoincrement," //自增ID
@@ -42,7 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             + "RSP4 text,"                                //探头4测量值
             + "State text,"                               //背包状态
             + "LongiTude real,"                           //经度
-            + "LatiTude real";                            //维度
+            + "LatiTude real)";                            //维度
 
     public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
                           int version) {

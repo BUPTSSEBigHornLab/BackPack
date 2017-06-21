@@ -125,7 +125,6 @@ public class MonitorFragment extends Fragment {
 
     /** 解析数据，更新界面 */
     private void UpdateUI(String data) {
-        Log.i(TAG, "UpdateUI: " + data);
         list.clear();
         String[] rsp_status = new String[RspSize];
         int index = -1;
