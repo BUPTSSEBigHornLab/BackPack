@@ -89,7 +89,15 @@ public class MonitorFragment extends Fragment {
         Button srart = (Button) view.findViewById(R.id.start);
         srart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Log.i(TAG, "onClick: " + "在发送");
                 timer.schedule(task, 0, 2000); // 0s后执行task,经过2s再次执行
+            }
+        });
+
+        Button stop = (Button) view.findViewById(R.id.stop);
+        stop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                stopTimer();
             }
         });
 
@@ -108,6 +116,7 @@ public class MonitorFragment extends Fragment {
         public void handleMessage(Message msg) {
             if (msg.what == 1) {
                 String to_send = "GMA";
+                //Log.i(TAG, "handleMessage: " + to_send);
                 MainActivity.bt.send(to_send.getBytes(), true);
             }
             super.handleMessage(msg);
@@ -193,5 +202,22 @@ public class MonitorFragment extends Fragment {
         }else {
 
         }
+    }
+
+    //停止计时器
+    private void stopTimer() {
+        if(timer != null) {
+            timer.cancel();
+        }
+
+        if(task != null) {
+            task.cancel();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        stopTimer();
+        super.onStop();
     }
 }

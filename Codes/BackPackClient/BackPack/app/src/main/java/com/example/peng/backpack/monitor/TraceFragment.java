@@ -144,7 +144,10 @@ public class TraceFragment extends Fragment {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 Log.i(TAG, "onReceiveLocation: "+"纬度："+Double.toString(latitude)+"；经度：" +
-                        Double.toString(longitude) + "；状态：" + statusName[ColorStatus]);
+                        Double.toString(longitude) + "；状态：" + statusName[ColorStatus] + "；精准度"
+                        + location.getRadius());
+                        //+ "；地址" + location.getAddrStr() + "；运营商" +
+                        //location.getOperators());
 
                 mBaiduMap.setMyLocationData(locData);
                 LatLng ll = new LatLng(location.getLatitude(),
