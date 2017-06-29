@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
     public static BluetoothSPP bt;
     public static DataBaseModule dataBaseModule = new DataBaseModule();
     public static int PackID;
+    public static int EventID;
     private GoogleApiClient client;
 
     @Override
@@ -65,8 +66,6 @@ public class MainActivity extends Activity {
                 try {
                     dataBaseModule.addPack(name, address);
                     PackID = dataBaseModule.queryPackID(address);
-                    Log.i(TAG, "onDeviceConnected: " + PackID);
-                    dataBaseModule.queryPack();
                 }catch (Exception e) {
                     Log.i(TAG, "onDeviceConnected: " + e.toString());
                 }

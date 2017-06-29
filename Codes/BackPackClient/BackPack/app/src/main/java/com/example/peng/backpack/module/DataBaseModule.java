@@ -79,12 +79,11 @@ public class DataBaseModule {
     }
 
     /** 在EVENT表中添加数据 */
-    public void addEvent(int PackID, String StartTime, String EndTime) {
+    public void addEvent(int PackID, String StartTime) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("PackID", PackID);
         values.put("StartTime", StartTime);
-        values.put("EndTime", EndTime);
         db.insert("EVENT", null, values);
     }
 
@@ -94,8 +93,11 @@ public class DataBaseModule {
     }
 
     /** 在EVENT表中更新数据 */
-    public void updateEvent() {
-
+    public void updateEvent(int EventID, String EndTime) {
+        ContentValues values = new ContentValues();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        values.put("EndTime", EndTime);
+        db.update("EVENT", values, "EventID = ?", new String[]{String.valueOf(EventID)});
     }
 
     /** 在EVENT表中查询数据 */
@@ -104,14 +106,28 @@ public class DataBaseModule {
         Cursor cursor = db.query("EVENT", null, null, null, null, null, null);
         if(cursor.moveToFirst()) {
             do{
+                int EventID = cursor.getInt(cursor.getColumnIndex("EventID"));
                 int PackID = cursor.getInt(cursor.getColumnIndex("PackID"));
                 String StartTime = cursor.getString(cursor.getColumnIndex("StartTime"));
                 String EndTime = cursor.getString(cursor.getColumnIndex("EndTime"));
-                Log.i(TAG, "queryPack: " + PackID);
-                Log.i(TAG, "queryPack: " + StartTime);
+                Log.i(TAG, "queryEvent: " + EventID);
+                Log.i(TAG, "queryEvent: " + PackID);
+                Log.i(TAG, "queryEvent: " + StartTime);
                 Log.i(TAG, "queryEvent: " + EndTime);
             }while(cursor.moveToNext());
         }
+    }
+
+    public int queryEventID() {
+        int id = -1;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM EVENT WHERE EndTime is NULL",new String[]{});
+        while(cursor.moveToNext()) {
+            id = cursor.getInt(cursor.getColumnIndex("EventID"));
+        }
+        cursor.close();
+
+        return id;
     }
 
     /** 在Data中添加数据 */
@@ -160,9 +176,9 @@ public class DataBaseModule {
                 double LongiTude = cursor.getDouble(cursor.getColumnIndex("LongiTude"));
                 double LatiTude = cursor.getDouble(cursor.getColumnIndex("LatiTude"));
 
-                Log.i(TAG, "queryPack: " + PackID);
-                Log.i(TAG, "queryPack: " + EventID);
-                Log.i(TAG, "queryEvent: " + Time);
+                Log.i(TAG, "queryData: " + PackID);
+                Log.i(TAG, "queryData: " + EventID);
+                Log.i(TAG, "queryData: " + Time);
                 Log.i(TAG, "queryData: " + RSP1);
                 Log.i(TAG, "queryData: " + RSP2);
                 Log.i(TAG, "queryData: " + RSP3);

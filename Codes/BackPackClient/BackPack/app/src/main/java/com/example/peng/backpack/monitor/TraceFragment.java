@@ -32,6 +32,8 @@ import com.baidu.mapapi.model.LatLng;
 import com.example.peng.backpack.LocationApplication;
 import com.example.peng.backpack.R;
 import com.example.peng.backpack.monitor.trace.LocationService;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,5 +201,13 @@ public class TraceFragment extends Fragment {
             }
         }
     };
+
+    /** 获取当前时间 */
+    private String getTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = dateFormat.format(new java.util.Date());
+
+        return date;
+    }
 
 }

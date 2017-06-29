@@ -24,6 +24,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import com.example.peng.backpack.R;
 import com.example.peng.backpack.main.MainActivity;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -41,10 +43,11 @@ public class MonitorFragment extends Fragment {
     private List<MonitorItem> list;
     private MonitorAdapter mAdapter;
     private ListView listView;
-
     private StatusListener mCallback;
     private Button status_button;
-    private Timer timer = new Timer();
+    private Timer timer = null;
+    private TimerTask task = null;
+    private boolean isStop = true;
 
     //用于Fragment和Activity通信的接口
     public interface StatusListener {
@@ -86,18 +89,27 @@ public class MonitorFragment extends Fragment {
 
         listView.setAdapter(mAdapter);
 
-        Button srart = (Button) view.findViewById(R.id.start);
-        srart.setOnClickListener(new View.OnClickListener() {
+        final Button start = (Button) view.findViewById(R.id.start);
+        start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.i(TAG, "onClick: " + "在发送");
-                timer.schedule(task, 0, 2000); // 0s后执行task,经过2s再次执行
-            }
-        });
+                try {
+                    if(isStop) {
+                        MainActivity.dataBaseModule.addEvent(MainActivity.PackID, getTime());
+                        MainActivity.EventID = MainActivity.dataBaseModule.queryEventID();
+                        Log.i(TAG, "onClick: " + MainActivity.EventID);
+                        startTimer();
+                        start.setText("停止");
+                    }else{
+                        stopTimer();
+                        MainActivity.dataBaseModule.updateEvent(MainActivity.EventID, getTime());
+                        MainActivity.dataBaseModule.queryEvent();
+                        start.setText("开始");
+                    }
+                    isStop = !isStop;
 
-        Button stop = (Button) view.findViewById(R.id.stop);
-        stop.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                stopTimer();
+                }catch (Exception e) {
+                    Log.i(TAG, "onClick: " + e.toString());
+                }
             }
         });
 
@@ -120,15 +132,6 @@ public class MonitorFragment extends Fragment {
                 MainActivity.bt.send(to_send.getBytes(), true);
             }
             super.handleMessage(msg);
-        }
-    };
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            // 需要做的事:发送消息
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
         }
     };
 
@@ -204,14 +207,38 @@ public class MonitorFragment extends Fragment {
         }
     }
 
-    //停止计时器
+    /** 启动计时器 */
+    private void startTimer() {
+        if(timer == null) {
+            timer = new Timer();
+        }
+
+        if(task == null) {
+            task = new TimerTask() {
+                @Override
+                public void run() {
+                    // 需要做的事:发送消息
+                    Message message = new Message();
+                    message.what = 1;
+                    handler.sendMessage(message);
+                }
+            };
+        }
+        if(timer != null && task != null) {
+            timer.schedule(task, 0, 2000); // 0s后执行task,经过2s再次执行
+        }
+    }
+
+    /** 停止计时器 */
     private void stopTimer() {
         if(timer != null) {
             timer.cancel();
+            timer = null;
         }
 
         if(task != null) {
             task.cancel();
+            task = null;
         }
     }
 
@@ -219,5 +246,13 @@ public class MonitorFragment extends Fragment {
     public void onStop() {
         stopTimer();
         super.onStop();
+    }
+
+    /** 获取当前时间 */
+    private String getTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = dateFormat.format(new java.util.Date());
+
+        return date;
     }
 }
