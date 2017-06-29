@@ -20,14 +20,10 @@ public class DataBaseModule {
 
     private static final String TAG = "DataBaseModule";
     private DataBaseHelper dbHelper;
-    private Context mContext;
 
-    private DataBaseModule(Context context) {
-        mContext = context;
-    }
     /** 初始化创建数据库和表格 */
-    public void init() {
-        dbHelper = new DataBaseHelper(mContext, "BACKPACK.db", null, 1);
+    public void init(Context context) {
+        dbHelper = new DataBaseHelper(context, "BACKPACK.db", null, 1);
         Log.i(TAG, "init: " + "数据库已创建");
         dbHelper.getWritableDatabase();
         Log.i(TAG, "init: " + "判断性创建表格");
@@ -66,12 +62,18 @@ public class DataBaseModule {
                 Log.i(TAG, "queryPack: " + MACAddress);
             }while(cursor.moveToNext());
         }
+        cursor.close();
     }
 
     /** 根据MAC地址查询PACKID */
     public int queryPackID(String MACAddress) {
         int id = -1;
-
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM PACK WHERE MACAddress = ?",new String[]{MACAddress});
+        while(cursor.moveToNext()) {
+            id = cursor.getInt(cursor.getColumnIndex("PackID"));
+        }
+        cursor.close();
 
         return id;
     }

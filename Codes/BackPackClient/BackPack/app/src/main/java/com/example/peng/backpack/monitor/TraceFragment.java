@@ -32,7 +32,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.example.peng.backpack.LocationApplication;
 import com.example.peng.backpack.R;
 import com.example.peng.backpack.monitor.trace.LocationService;
-
 import java.util.ArrayList;
 import java.util.List;
 

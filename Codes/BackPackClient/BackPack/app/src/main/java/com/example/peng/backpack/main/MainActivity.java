@@ -17,11 +17,14 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.peng.backpack.module.DataBaseModule;
 import com.example.peng.backpack.monitor.MonitorActivity;
 import com.example.peng.backpack.R;
 import com.google.android.gms.appindexing.Action;
@@ -38,7 +41,8 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
     public static BluetoothSPP bt;
-    //public static DataBaseModule dataBaseModule;
+    public static DataBaseModule dataBaseModule = new DataBaseModule();
+    public static int PackID;
     private GoogleApiClient client;
 
     @Override
@@ -46,10 +50,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         bt = new BluetoothSPP(this);
+        dataBaseModule.init(this);
 
         bt.setOnDataReceivedListener(new OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-               // Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
             }
         });
         /**************************************蓝牙配置页面*************************************/
@@ -57,6 +62,14 @@ public class MainActivity extends Activity {
         bt.setBluetoothConnectionListener(new BluetoothConnectionListener() {
 
             public void onDeviceConnected(String name, String address) {
+                try {
+                    dataBaseModule.addPack(name, address);
+                    PackID = dataBaseModule.queryPackID(address);
+                    Log.i(TAG, "onDeviceConnected: " + PackID);
+                    dataBaseModule.queryPack();
+                }catch (Exception e) {
+                    Log.i(TAG, "onDeviceConnected: " + e.toString());
+                }
                 Toast.makeText(getApplicationContext()
                         , "连接到" + name + "\n" + address
                         , Toast.LENGTH_SHORT).show();
@@ -114,7 +127,6 @@ public class MainActivity extends Activity {
         if (!bt.isBluetoothEnabled()) {
             Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
-            //dataBaseModule.addPack(bt.getConnectedDeviceName(), bt.getConnectedDeviceAddress());
         } else {
             if (!bt.isServiceAvailable()) {
                 bt.setupService();
